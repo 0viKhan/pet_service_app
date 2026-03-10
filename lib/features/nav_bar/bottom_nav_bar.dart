@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+
+import '../../app/routes/app_routes.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -75,11 +79,16 @@ class BottomNavBar extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 28.sp,
-                    ),
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.toNamed(AppRoutes.addAnimal);
+                        },
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 27.sp,
+                        ),
+                      )
                   ),
                 ),
               ),

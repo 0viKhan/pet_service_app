@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-import '../../../../app/routes/app_routes.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../controller/forgot_password_controller.dart';
 
-class CreateNewPasswordView extends StatelessWidget {
+class CreateNewPasswordView extends GetView<ForgotPasswordController> {
   const CreateNewPasswordView({super.key});
 
   @override
@@ -16,7 +15,6 @@ class CreateNewPasswordView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFFF6F6F6),
         elevation: 0,
-        scrolledUnderElevation: 0,
         leading: IconButton(
           onPressed: Get.back,
           icon: Icon(
@@ -39,7 +37,6 @@ class CreateNewPasswordView extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: 20.h),
-
             Text(
               'Create New Password',
               style: TextStyle(
@@ -48,11 +45,9 @@ class CreateNewPasswordView extends StatelessWidget {
                 color: const Color(0xFF101828),
               ),
             ),
-
             SizedBox(height: 8.h),
-
             Text(
-              'Your password must be different from previous\nused password',
+              'Your password must be different from previous used password',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12.sp,
@@ -60,49 +55,68 @@ class CreateNewPasswordView extends StatelessWidget {
                 height: 1.4,
               ),
             ),
-
             SizedBox(height: 24.h),
 
-            AppTextField(
-              hintText: 'Password',
-              obscureText: true,
-              prefixIcon: Icon(
-                Icons.lock_outline,
-                size: 18.sp,
-                color: const Color(0xFF98A2B3),
-              ),
-              suffixIcon: Icon(
-                Icons.visibility_off_outlined,
-                size: 18.sp,
-                color: const Color(0xFF98A2B3),
+            Obx(
+                  () => AppTextField(
+                controller: controller.passwordController,
+                hintText: 'Password',
+                obscureText: controller.isPasswordHidden.value,
+                prefixIcon: Icon(
+                  Icons.lock_outline,
+                  size: 18.sp,
+                  color: const Color(0xFF98A2B3),
+                ),
+                suffixIcon: GestureDetector(
+                  onTap: controller.togglePasswordVisibility,
+                  child: Icon(
+                    controller.isPasswordHidden.value
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                    size: 18.sp,
+                    color: const Color(0xFF98A2B3),
+                  ),
+                ),
               ),
             ),
 
             SizedBox(height: 14.h),
 
-            AppTextField(
-              hintText: 'Confirm Password',
-              obscureText: true,
-              prefixIcon: Icon(
-                Icons.lock_outline,
-                size: 18.sp,
-                color: const Color(0xFF98A2B3),
-              ),
-              suffixIcon: Icon(
-                Icons.visibility_off_outlined,
-                size: 18.sp,
-                color: const Color(0xFF98A2B3),
+            Obx(
+                  () => AppTextField(
+                controller: controller.confirmPasswordController,
+                hintText: 'Confirm Password',
+                obscureText: controller.isConfirmPasswordHidden.value,
+                prefixIcon: Icon(
+                  Icons.lock_outline,
+                  size: 18.sp,
+                  color: const Color(0xFF98A2B3),
+                ),
+                suffixIcon: GestureDetector(
+                  onTap: controller.toggleConfirmPasswordVisibility,
+                  child: Icon(
+                    controller.isConfirmPasswordHidden.value
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                    size: 18.sp,
+                    color: const Color(0xFF98A2B3),
+                  ),
+                ),
               ),
             ),
 
+            const Spacer(),
+
+            Obx(
+                  () => AppButton(
+                title: 'Reset Password',
+                isLoading: controller.isResettingPassword.value,
+                onPressed: () {
+                  controller.resetPassword();
+                },
+              ),
+            ),
             SizedBox(height: 26.h),
-
-            AppButton(
-              title: 'Reset Password',
-              onPressed: () {
-                Get.toNamed(AppRoutes.passwordChanged);
-              },
-            ),
           ],
         ),
       ),

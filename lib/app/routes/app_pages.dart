@@ -1,13 +1,17 @@
 import 'package:get/get.dart';
-import '../../features/auth/forgot/bindings/OtpBinding.dart';
+import 'package:untitled1/features/auth/login/bindings/login_binding.dart';
+import '../../features/add_animal/bindings/add_animal_binding.dart';
+import '../../features/add_animal/view/add_animal_view.dart';
+import '../../features/auth/forgot/bindings/forgot_password_binding.dart';
 import '../../features/auth/forgot/view/create_new_password_view.dart';
 import '../../features/auth/forgot/view/otp.dart';
 import '../../features/auth/forgot/view/password_changed_view.dart';
 import '../../features/auth/forgot/view/reset_password_view.dart';
-import '../../features/auth/login/login_view.dart';
+import '../../features/auth/login/view/login_view.dart';
 import '../../features/auth/registration/binding/register_binding.dart';
 import '../../features/auth/registration/view/register_view.dart';
-import '../../features/home/view/home_view.dart';
+import '../../features/notification/view/notification_screen.dart';
+import '../../features/pet_description/view/pet_details.dart';
 import '../../features/splash/bindings/splash_binding.dart';
 import '../../features/splash/views/splash_view.dart';
 import '../../features/welcome/bindings/welcome_binding.dart';
@@ -30,25 +34,26 @@ class AppPages {
     GetPage(
       name: AppRoutes.login,
       page: () => const LoginView(),
+      binding: LoginBinding(),
     ),
     GetPage(
       name: AppRoutes.resetPassword,
       page: () => const ResetPasswordView(),
+      binding: ForgotPasswordBinding(),
     ),
     GetPage(
       name: AppRoutes.otp,
       page: () => const VerificationCodeView(),
-      binding: OtpBinding(),
     ),
     GetPage(
       name: AppRoutes.createNewPassword,
       page: () => const CreateNewPasswordView(),
+      binding: ForgotPasswordBinding(),
     ),
     GetPage(
       name: AppRoutes.passwordChanged,
       page: () => const PasswordChangedView(),
     ),
-
     GetPage(
       name: AppRoutes.register,
       page: () => const RegisterView(),
@@ -57,6 +62,19 @@ class AppPages {
     GetPage(
       name: AppRoutes.home,
       page: () => const MainView(),
+    ),
+    GetPage(
+      name: AppRoutes.addAnimal,
+      page: () => const AddAnimalView(),
+      binding: AddAnimalBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.petdetails,
+      page: () => const PetDetailsView(),
+    ),
+    GetPage(
+      name: AppRoutes.notification,
+      page: () => const NotificationView(),
     ),
   ];
 }

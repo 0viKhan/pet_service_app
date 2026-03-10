@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../../app/routes/app_routes.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../controller/forgot_password_controller.dart';
 
-class ResetPasswordView extends StatelessWidget {
+class ResetPasswordView extends GetView<ForgotPasswordController> {
   const ResetPasswordView({super.key});
 
   @override
@@ -39,7 +39,6 @@ class ResetPasswordView extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: 24.h),
-
             Column(
               children: [
                 Text(
@@ -64,6 +63,7 @@ class ResetPasswordView extends StatelessWidget {
                 ),
                 SizedBox(height: 18.h),
                 AppTextField(
+                  controller: controller.emailController,
                   hintText: 'Email',
                   keyboardType: TextInputType.emailAddress,
                   borderRadius: 111.r,
@@ -75,19 +75,15 @@ class ResetPasswordView extends StatelessWidget {
                 ),
               ],
             ),
-
             const Spacer(),
-
-            AppButton(
-              title: 'Send code',
-              onPressed: () {
-                Get.toNamed(
-                  AppRoutes.otp,
-                  arguments: {
-                    'nextRoute': AppRoutes.createNewPassword,
-                  },
-                );
-              },
+            Obx(
+                  () => AppButton(
+                title: 'Send code',
+                isLoading: controller.isSendingCode.value,
+                onPressed: () {
+                  controller.sendCode();
+                },
+              ),
             ),
             SizedBox(height: 26.h),
           ],

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:untitled1/app/routes/app_routes.dart';
-
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../controller/register_controller.dart';
@@ -20,7 +18,6 @@ class RegisterView extends GetView<RegisterController> {
           child: Column(
             children: [
               SizedBox(height: 4.h),
-
               Container(
                 height: 58.w,
                 width: 58.w,
@@ -37,9 +34,7 @@ class RegisterView extends GetView<RegisterController> {
                   ),
                 ),
               ),
-
               SizedBox(height: 15.h),
-
               Text(
                 'Create Your Account',
                 style: TextStyle(
@@ -48,9 +43,7 @@ class RegisterView extends GetView<RegisterController> {
                   color: const Color(0xFF101828),
                 ),
               ),
-
               SizedBox(height: 4.h),
-
               Text(
                 'Create account and enjoy all services',
                 style: TextStyle(
@@ -59,10 +52,8 @@ class RegisterView extends GetView<RegisterController> {
                   color: const Color(0xFF667085),
                 ),
               ),
-
               SizedBox(height: 18.h),
 
-              /// Role Tabs
               Obx(
                     () => Container(
                   padding: EdgeInsets.all(3.w),
@@ -158,30 +149,10 @@ class RegisterView extends GetView<RegisterController> {
                 ),
               ),
 
-              SizedBox(height: 10.h),
-
-              Obx(() => controller.isSelected('professionista')
-                  ? Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Personal Data',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF101828),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 5.h),
-                ],
-              )
-                  : const SizedBox.shrink()),
-
               SizedBox(height: 12.h),
 
               AppTextField(
+                controller: controller.firstNameController,
                 hintText: 'First Name',
                 prefixIcon: Icon(
                   Icons.person_outline,
@@ -193,6 +164,7 @@ class RegisterView extends GetView<RegisterController> {
               SizedBox(height: 12.h),
 
               AppTextField(
+                controller: controller.lastNameController,
                 hintText: 'Last Name',
                 prefixIcon: Icon(
                   Icons.person_outline,
@@ -204,6 +176,7 @@ class RegisterView extends GetView<RegisterController> {
               SizedBox(height: 12.h),
 
               AppTextField(
+                controller: controller.emailController,
                 hintText: 'Email',
                 keyboardType: TextInputType.emailAddress,
                 prefixIcon: Icon(
@@ -216,6 +189,7 @@ class RegisterView extends GetView<RegisterController> {
               SizedBox(height: 12.h),
 
               AppTextField(
+                controller: controller.cityController,
                 hintText: 'City',
                 prefixIcon: Icon(
                   Icons.location_city_outlined,
@@ -226,50 +200,64 @@ class RegisterView extends GetView<RegisterController> {
 
               SizedBox(height: 12.h),
 
-              AppTextField(
-                hintText: 'Password',
-                obscureText: true,
-                prefixIcon: Icon(
-                  Icons.lock_outline,
-                  size: 18.sp,
-                  color: const Color(0xFF98A2B3),
-                ),
-                suffixIcon: Icon(
-                  Icons.visibility_off_outlined,
-                  size: 18.sp,
-                  color: const Color(0xFF98A2B3),
+              Obx(
+                    () => AppTextField(
+                  controller: controller.passwordController,
+                  hintText: 'Password',
+                  obscureText: controller.isPasswordHidden.value,
+                  prefixIcon: Icon(
+                    Icons.lock_outline,
+                    size: 18.sp,
+                    color: const Color(0xFF98A2B3),
+                  ),
+                  suffixIcon: GestureDetector(
+                    onTap: controller.togglePasswordVisibility,
+                    child: Icon(
+                      controller.isPasswordHidden.value
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      size: 18.sp,
+                      color: const Color(0xFF98A2B3),
+                    ),
+                  ),
                 ),
               ),
 
               SizedBox(height: 12.h),
 
-              AppTextField(
-                hintText: 'Confirm Password',
-                obscureText: true,
-                prefixIcon: Icon(
-                  Icons.lock_outline,
-                  size: 18.sp,
-                  color: const Color(0xFF98A2B3),
-                ),
-                suffixIcon: Icon(
-                  Icons.visibility_off_outlined,
-                  size: 18.sp,
-                  color: const Color(0xFF98A2B3),
+              Obx(
+                    () => AppTextField(
+                  controller: controller.confirmPasswordController,
+                  hintText: 'Confirm Password',
+                  obscureText: controller.isConfirmPasswordHidden.value,
+                  prefixIcon: Icon(
+                    Icons.lock_outline,
+                    size: 18.sp,
+                    color: const Color(0xFF98A2B3),
+                  ),
+                  suffixIcon: GestureDetector(
+                    onTap: controller.toggleConfirmPasswordVisibility,
+                    child: Icon(
+                      controller.isConfirmPasswordHidden.value
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      size: 18.sp,
+                      color: const Color(0xFF98A2B3),
+                    ),
+                  ),
                 ),
               ),
 
               SizedBox(height: 20.h),
 
-              AppButton(
-                title: 'Next',
-                onPressed: () {
-                  Get.toNamed(
-                    AppRoutes.otp,
-                    arguments: {
-                      'nextRoute': AppRoutes.passwordChanged,
-                    },
-                  );
-                },
+              Obx(
+                    () => AppButton(
+                  title: 'Next',
+                  isLoading: controller.isLoading.value,
+                  onPressed: () {
+                    controller.register();
+                  },
+                ),
               ),
 
               SizedBox(height: 20.h),
