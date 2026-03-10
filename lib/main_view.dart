@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'features/home/view/home_view.dart';
 import 'features/home/view/professionals_view.dart';
 import 'features/nav_bar/bottom_nav_bar.dart';
+import 'features/profile/view/profile_screen.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});
@@ -20,9 +21,7 @@ class _MainViewState extends State<MainView> {
       body: Center(child: Text('Map Screen')),
     ),
     const ProfessionalsView(),
-    const Scaffold(
-      body: Center(child: Text('Profile Screen')),
-    ),
+    const ProfileView(),
   ];
 
   void onNavTap(int index) {
