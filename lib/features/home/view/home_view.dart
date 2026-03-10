@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../nav_bar/bottom_nav_bar.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:untitled1/app/routes/app_routes.dart';
 import '../widgets/pets_section.dart';
 import '../widgets/service_card.dart';
 class HomeView extends StatelessWidget {
@@ -109,9 +111,14 @@ class HomeView extends StatelessWidget {
           showDot: false,
         ),
         SizedBox(width: 14.w),
-        _buildActionIcon(
-          icon: Icons.notifications_none_rounded,
-          showDot: true,
+        GestureDetector(
+         onTap:(){
+           Get.toNamed(AppRoutes.notification);
+         } ,
+          child: _buildActionIcon(
+            icon: Icons.notifications_none_rounded,
+            showDot: true,
+          ),
         ),
       ],
     );
