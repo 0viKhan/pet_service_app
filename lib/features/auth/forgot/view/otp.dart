@@ -4,13 +4,47 @@ import 'package:get/get.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../controller/forgot_password_controller.dart';
+import '../../registration/controller/register_controller.dart';
 
-class VerificationCodeView extends GetView<ForgotPasswordController> {
+class VerificationCodeView extends StatelessWidget {
   const VerificationCodeView({super.key});
 
   @override
   Widget build(BuildContext context) {
     final email = Get.arguments?['email'] ?? '';
+    final otpType = Get.arguments?['otpType'] ?? 'forgot';
+
+    final isRegisterFlow = otpType == 'register';
+
+    final ForgotPasswordController? forgotController =
+    Get.isRegistered<ForgotPasswordController>()
+        ? Get.find<ForgotPasswordController>()
+        : null;
+
+    final RegisterController? registerController =
+    Get.isRegistered<RegisterController>()
+        ? Get.find<RegisterController>()
+        : null;
+
+    if (isRegisterFlow && registerController == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('Register controller not found'),
+        ),
+      );
+    }
+
+    if (!isRegisterFlow && forgotController == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('Forgot password controller not found'),
+        ),
+      );
+    }
+
+    final otpTextController = isRegisterFlow
+        ? registerController!.otpController
+        : forgotController!.otpController;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
@@ -59,20 +93,28 @@ class VerificationCodeView extends GetView<ForgotPasswordController> {
             ),
             SizedBox(height: 24.h),
             AppTextField(
-              controller: controller.otpController,
+              controller: otpTextController,
               hintText: 'Enter OTP',
               keyboardType: TextInputType.number,
             ),
             const Spacer(),
-            Obx(
-                  () => AppButton(
+            Obx(() {
+              final isLoading = isRegisterFlow
+                  ? registerController!.isVerifyingOtp.value
+                  : forgotController!.isVerifyingOtp.value;
+
+              return AppButton(
                 title: 'Continue',
-                isLoading: controller.isVerifyingOtp.value,
+                isLoading: isLoading,
                 onPressed: () {
-                  controller.verifyOtp();
+                  if (isRegisterFlow) {
+                    registerController!.verifyRegisterOtp(email);
+                  } else {
+                    forgotController!.verifyOtp();
+                  }
                 },
-              ),
-            ),
+              );
+            }),
             SizedBox(height: 26.h),
           ],
         ),

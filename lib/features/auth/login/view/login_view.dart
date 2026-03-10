@@ -62,8 +62,7 @@ class LoginView extends GetView<LoginController> {
                   ),
                 ),
 
-                SizedBox(height: 28.h),
-
+                SizedBox(height: 29.h),
                 AppTextField(
                   controller: controller.emailController,
                   hintText: 'Email',
