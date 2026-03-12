@@ -13,4 +13,5 @@ class AppRoutes {
   static const petdetails ='/pet-details';
   static const notification ='/notification';
   static const changePassword = '/change-password';
+
 }

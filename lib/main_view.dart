@@ -16,7 +16,7 @@ class _MainViewState extends State<MainView> {
   int currentIndex = 0;
 
   final List<Widget> screens = [
-    const HomeView(),
+      HomeView(),
     const Scaffold(
       body: Center(child: Text('Map Screen')),
     ),

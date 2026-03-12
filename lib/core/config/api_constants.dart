@@ -6,7 +6,8 @@ class ApiConstants {
   static const String signUp = '$baseUrl/auth/sign-up';
   static const String verifyRegisterOtp = '$baseUrl/auth/verify-account';
   static const String changePassword  = '$baseUrl/auth/change-password';
-
+  static const String updateProfile = '$baseUrl/users/update-profile';
+  static const String logout = '$baseUrl/auth/logout';
 
 
 }

@@ -7,11 +7,37 @@ import 'package:get/get.dart';
 import '../../../../core/services/local_storage_service.dart';
 import '../../../../core/services/photo_picker_service.dart';
 import '../../../../core/widgets/image_picker_bottom_sheet.dart' hide PhotoPickerService;
+import '../controller/profile_controller.dart';
 
 class ProfileHeader extends StatelessWidget {
   ProfileHeader({super.key});
 
-  final PhotoPickerService photoPickerService = Get.find<PhotoPickerService>();
+  final PhotoPickerService _photoPickerService = Get.find<PhotoPickerService>();
+  final ProfileController _profileController = Get.find<ProfileController>();
+
+  Future<void> _pickAndUploadImage(BuildContext context) async {
+    await ImagePickerBottomSheet.show(
+      context,
+      photoPickerService: _photoPickerService,
+    );
+
+    if (_photoPickerService.imageList.isNotEmpty) {
+      final File pickedImage = _photoPickerService.imageList.first;
+      await _profileController.uploadProfileImage(pickedImage);
+    }
+  }
+
+  ImageProvider _getProfileImage() {
+    if (_profileController.selectedLocalImage.value != null) {
+      return FileImage(_profileController.selectedLocalImage.value!);
+    }
+
+    if (_profileController.profileImageUrl.value.isNotEmpty) {
+      return NetworkImage(_profileController.profileImageUrl.value);
+    }
+
+    return const AssetImage('assets/images/cat.png');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,29 +66,16 @@ class ProfileHeader extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12.h),
-
           GestureDetector(
-            onTap: () async {
-              await ImagePickerBottomSheet.show(
-                context,
-                photoPickerService: photoPickerService,
-              );
-            },
-            child: Obx(() {
-              final bool hasImage = photoPickerService.imageList.isNotEmpty;
-              final File? selectedImage =
-              hasImage ? photoPickerService.imageList.first : null;
-
-              return Stack(
+            onTap: () => _pickAndUploadImage(context),
+            child: Obx(
+                  () => Stack(
                 alignment: Alignment.bottomRight,
                 children: [
                   CircleAvatar(
                     radius: 34.r,
                     backgroundColor: Colors.white24,
-                    backgroundImage: hasImage
-                        ? FileImage(selectedImage!)
-                        : const AssetImage('assets/images/cat.png')
-                    as ImageProvider,
+                    backgroundImage: _getProfileImage(),
                   ),
                   Container(
                     padding: EdgeInsets.all(6.r),
@@ -70,19 +83,26 @@ class ProfileHeader extends StatelessWidget {
                       color: Colors.white,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
+                    child: _profileController.isUploading.value
+                        ? SizedBox(
+                      width: 16.w,
+                      height: 16.w,
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Color(0xFF006D5B),
+                      ),
+                    )
+                        : Icon(
                       Icons.camera_alt_outlined,
                       size: 16.sp,
                       color: const Color(0xFF006D5B),
                     ),
                   ),
                 ],
-              );
-            }),
+              ),
+            ),
           ),
-
           SizedBox(height: 10.h),
-
           FutureBuilder<String>(
             future: LocalStorageService.getFullName(),
             builder: (context, snapshot) {

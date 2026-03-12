@@ -1,17 +1,39 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
 import 'package:untitled1/app/routes/app_routes.dart';
+
+import '../../../../core/services/local_storage_service.dart';
+import '../../auth/profile/controller/profile_controller.dart';
 import '../widgets/pets_section.dart';
 import '../widgets/service_card.dart';
+
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+  HomeView({super.key});
 
   static const Color _bgColor = Color(0xFFF4F5F4);
   static const Color _primary = Color(0xFF0A7C6B);
   static const Color _textDark = Color(0xFF1F2937);
   static const Color _textLight = Color(0xFF7B8794);
+
+  final ProfileController _profileController = Get.find<ProfileController>();
+
+  ImageProvider _getHomeProfileImage() {
+    final File? localImage = _profileController.selectedLocalImage.value;
+    final String networkImage = _profileController.profileImageUrl.value;
+
+    if (localImage != null) {
+      return FileImage(localImage);
+    }
+
+    if (networkImage.isNotEmpty) {
+      return NetworkImage(networkImage);
+    }
+
+    return const AssetImage('assets/images/doctor_girl.jpg');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,31 +50,25 @@ class HomeView extends StatelessWidget {
                   children: [
                     _buildTopHeader(),
                     SizedBox(height: 26.h),
-
                     const PetsSection(),
                     SizedBox(height: 22.h),
-
                     _buildSectionHeader(
                       title: 'Nearest Park',
                       onTap: () {},
                     ),
                     SizedBox(height: 14.h),
-
                     _buildParkList(),
                     SizedBox(height: 24.h),
-
                     _buildSectionHeader(
                       title: 'Near By Service',
                       onTap: () {},
                     ),
                     SizedBox(height: 14.h),
-
                     const ServiceCard(),
                   ],
                 ),
               ),
             ),
-
           ],
         ),
       ),
@@ -62,22 +78,24 @@ class HomeView extends StatelessWidget {
   Widget _buildTopHeader() {
     return Row(
       children: [
-        Container(
-          width: 48.w,
-          height: 48.w,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 2),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(.06),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+        Obx(
+              () => Container(
+            width: 48.w,
+            height: 48.w,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 2),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(.06),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+              image: DecorationImage(
+                image: _getHomeProfileImage(),
+                fit: BoxFit.cover,
               ),
-            ],
-            image: const DecorationImage(
-              image: AssetImage('assets/images/doctor_girl.jpg'),
-              fit: BoxFit.cover,
             ),
           ),
         ),
@@ -95,13 +113,20 @@ class HomeView extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 2.h),
-              Text(
-                'John Doe',
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w700,
-                  color: _textDark,
-                ),
+              FutureBuilder<String>(
+                future: LocalStorageService.getFullName(),
+                builder: (context, snapshot) {
+                  final fullName = (snapshot.data ?? '').trim();
+
+                  return Text(
+                    fullName.isEmpty ? 'John Doe' : fullName,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w700,
+                      color: _textDark,
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -112,9 +137,9 @@ class HomeView extends StatelessWidget {
         ),
         SizedBox(width: 14.w),
         GestureDetector(
-         onTap:(){
-           Get.toNamed(AppRoutes.notification);
-         } ,
+          onTap: () {
+            Get.toNamed(AppRoutes.notification);
+          },
           child: _buildActionIcon(
             icon: Icons.notifications_none_rounded,
             showDot: true,
@@ -287,6 +312,7 @@ class HomeView extends StatelessWidget {
       ),
     );
   }
+
   Widget _navIcon(IconData icon, bool active) {
     return Icon(
       icon,

@@ -19,6 +19,7 @@ import '../../features/splash/views/splash_view.dart';
 import '../../features/welcome/bindings/welcome_binding.dart';
 import '../../features/welcome/onboarding screen/welcome_view.dart';
 import '../../main_view.dart';
+import '../bindings/main_binding.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -64,6 +65,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.home,
       page: () => const MainView(),
+      binding: MainBinding(),
     ),
     GetPage(
       name: AppRoutes.addAnimal,
@@ -86,5 +88,6 @@ class AppPages {
         Get.lazyPut(() => ChangePasswordController());
       }),
     ),
+
   ];
 }
