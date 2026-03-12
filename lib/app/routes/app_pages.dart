@@ -8,6 +8,8 @@ import '../../features/auth/forgot/view/otp.dart';
 import '../../features/auth/forgot/view/password_changed_view.dart';
 import '../../features/auth/forgot/view/reset_password_view.dart';
 import '../../features/auth/login/view/login_view.dart';
+import '../../features/auth/profile/controller/ChangePasswordController.dart';
+import '../../features/auth/profile/view/change_password_screen.dart';
 import '../../features/auth/registration/binding/register_binding.dart';
 import '../../features/auth/registration/view/register_view.dart';
 import '../../features/notification/view/notification_screen.dart';
@@ -75,6 +77,14 @@ class AppPages {
     GetPage(
       name: AppRoutes.notification,
       page: () => const NotificationView(),
+    ),
+    // Route file এ
+    GetPage(
+      name: '/change-password',
+      page: () => ChangePasswordView(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => ChangePasswordController());
+      }),
     ),
   ];
 }

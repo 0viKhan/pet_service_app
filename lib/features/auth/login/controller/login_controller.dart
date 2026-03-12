@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../../../app/routes/app_routes.dart';
+import '../../../../core/services/local_storage_service.dart';
 import '../model/login_response_model.dart';
 
 class LoginController extends GetxController {
@@ -48,6 +49,9 @@ class LoginController extends GetxController {
         final token = loginResponse!.data.accessToken;
         debugPrint('Access Token: $token');
 
+        await LocalStorageService.saveLogin(
+          accessToken: token,
+        );
         Get.offAllNamed(AppRoutes.home);
       } else {
         Get.snackbar(

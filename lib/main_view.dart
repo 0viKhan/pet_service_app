@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'features/auth/profile/view/profile_screen.dart';
 import 'features/home/view/home_view.dart';
 import 'features/home/view/professionals_view.dart';
 import 'features/nav_bar/bottom_nav_bar.dart';
-import 'features/profile/view/profile_screen.dart';
 
 class MainView extends StatefulWidget {
   const MainView({super.key});

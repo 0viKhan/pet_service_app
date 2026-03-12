@@ -144,7 +144,7 @@ class LoginView extends GetView<LoginController> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Get.toNamed(AppRoutes.register);
+                        Get.offAllNamed(AppRoutes.register);
                       },
                       child: Text(
                         'Register',
