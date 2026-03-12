@@ -47,13 +47,22 @@ class LoginController extends GetxController {
         );
 
         final token = loginResponse!.data.accessToken;
+        final user = loginResponse!.data.user;
+
         debugPrint('Access Token: $token');
+        debugPrint('Logged User: ${user.firstName} ${user.lastName}');
 
         await LocalStorageService.saveLogin(
           accessToken: token,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
         );
+
         Get.offAllNamed(AppRoutes.home);
-      } else {
+      }
+
+      else {
         Get.snackbar(
           'Login Failed',
           loginResponse?.message ?? 'Invalid email or password',

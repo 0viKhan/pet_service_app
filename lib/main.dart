@@ -6,9 +6,12 @@ import 'package:get/get.dart';
 
 import 'app/routes/app_pages.dart';
 import 'app/routes/app_routes.dart';
+import 'core/services/photo_picker_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  Get.put(PhotoPickerService());
 
   runApp(
     DevicePreview(

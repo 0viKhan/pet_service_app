@@ -69,7 +69,7 @@ class ProfileView extends StatelessWidget {
       backgroundColor: const Color(0xFFF2F4F7),
       body: Stack(
         children: [
-          const ProfileHeader(),
+           ProfileHeader(),
           Positioned(
             top: 220.h,
             left: 0,
