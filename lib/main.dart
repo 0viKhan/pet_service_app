@@ -1,6 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -35,7 +36,11 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           useInheritedMediaQuery: true,
           locale: DevicePreview.locale(context),
-          builder: DevicePreview.appBuilder,
+          builder: (context, child) {
+            child = DevicePreview.appBuilder(context, child);
+            child = EasyLoading.init()(context, child);
+            return child;
+          },
           initialRoute: AppRoutes.splash,
           getPages: AppPages.pages,
         );

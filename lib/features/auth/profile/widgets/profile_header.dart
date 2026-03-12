@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 import '../../../../core/services/local_storage_service.dart';
 import '../../../../core/services/photo_picker_service.dart';
-import '../../../../core/widgets/image_picker_bottom_sheet.dart';
+import '../../../../core/widgets/image_picker_bottom_sheet.dart' hide PhotoPickerService;
 
 class ProfileHeader extends StatelessWidget {
   ProfileHeader({super.key});

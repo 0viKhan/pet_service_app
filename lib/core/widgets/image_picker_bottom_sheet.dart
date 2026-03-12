@@ -30,8 +30,10 @@ class ImagePickerBottomSheet extends StatelessWidget {
             leading: const Icon(Icons.camera_alt, color: Colors.green),
             title: const Text('Take a Photo'),
             onTap: () async {
-              final File? file = await photoPickerService.pickFromCamera();
-              Get.back(result: file);
+              Get.back();
+              await Future.delayed(const Duration(milliseconds: 200));
+              final file = await photoPickerService.pickFromGallery();
+              debugPrint('picked file: ${file?.path}');
             },
           ),
           ListTile(
