@@ -50,7 +50,7 @@ class HomeView extends StatelessWidget {
                   children: [
                     _buildTopHeader(),
                     SizedBox(height: 26.h),
-                    const PetsSection(),
+                     PetsSection(),
                     SizedBox(height: 22.h),
                     _buildSectionHeader(
                       title: 'Nearest Park',
