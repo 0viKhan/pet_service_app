@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 
+import '../../../../app/routes/app_routes.dart';
 import '../../../../core/services/auth_service.dart';
 import '../../../../core/services/local_storage_service.dart';
 import '../../../../core/services/profile_service.dart';
@@ -18,7 +19,32 @@ class ProfileController extends GetxController {
     super.onInit();
     _loadSavedProfileImage();
   }
+  Future<void> logout() async {
+    try {
+      final token = await LocalStorageService.getAccessToken();
 
+      if (token != null && token.isNotEmpty) {
+        await _authService.logout(token: token);
+      }
+
+      await LocalStorageService.clearLogin();
+
+      selectedLocalImage.value = null;
+      profileImageUrl.value = '';
+
+      Get.offAllNamed(AppRoutes.login);
+
+      Get.snackbar(
+        'Success',
+        'Logged Out successfully',
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        e.toString(),
+      );
+    }
+  }
   Future<void> uploadProfileImage(File image) async {
     try {
       isUploading.value = true;

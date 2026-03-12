@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../controller/profile_controller.dart';
 import '../widgets/logout_tile.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_menu_item_data.dart';
@@ -90,8 +91,9 @@ class ProfileView extends StatelessWidget {
                   if (index == menuItems.length) {
                     return LogoutTile(
                       onTap: () {
-                        Get.offAllNamed('/login');
+                        Get.find<ProfileController>().logout();
                       },
+
                     );
                   }
 
