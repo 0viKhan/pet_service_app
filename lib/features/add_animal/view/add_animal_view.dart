@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -6,8 +8,10 @@ import '../../../core/widgets/app_dropdown_field.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../controller/add_animal_controller.dart';
+
 class AddAnimalView extends GetView<AddAnimalController> {
   const AddAnimalView({super.key});
+
   static const Color primaryColor = Color(0xFF0A7C6B);
   static const Color pageBg = Colors.white;
   static const Color textDark = Color(0xFF2E2E2E);
@@ -206,7 +210,7 @@ class AddAnimalView extends GetView<AddAnimalController> {
           ],
         ),
         SizedBox(height: 8.h),
-        _buildImagePicker(),
+        _buildPetImagePicker(),
         SizedBox(height: 22.h),
         primary_button(
           primaryColor: primaryColor,
@@ -253,7 +257,7 @@ class AddAnimalView extends GetView<AddAnimalController> {
         SizedBox(height: 12.h),
         _buildLabel('Image'),
         SizedBox(height: 8.h),
-        _buildImagePicker(),
+        _buildParkImagePicker(),
         SizedBox(height: 22.h),
         primary_button(
           primaryColor: primaryColor,
@@ -275,8 +279,6 @@ class AddAnimalView extends GetView<AddAnimalController> {
       ),
     );
   }
-
-
 
   Widget _buildAnimalTypes() {
     return Obx(
@@ -323,20 +325,109 @@ class AddAnimalView extends GetView<AddAnimalController> {
       ),
     );
   }
-  Widget _buildImagePicker() {
-    return Container(
-      width: 34.w,
-      height: 34.w,
-      decoration: BoxDecoration(
-        color: const Color(0xFFD8DEDD),
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: const Color(0xFFC6CFCD)),
+
+  Widget _buildPetImagePicker() {
+    return Obx(
+          () => Wrap(
+        spacing: 10.w,
+        runSpacing: 10.h,
+        children: [
+          ...controller.petImages.map(
+                (file) => _buildImagePreview(
+              file: file,
+              onRemove: () => controller.removePetImage(file),
+            ),
+          ),
+          if (controller.petImages.length < 5)
+            _buildAddImageTile(
+              onTap: controller.pickPetImages,
+            ),
+        ],
       ),
-      child: Icon(
-        Icons.add_a_photo_outlined,
-        size: 16.sp,
-        color: const Color(0xFF5F6766),
+    );
+  }
+
+  Widget _buildParkImagePicker() {
+    return Obx(
+          () => Wrap(
+        spacing: 10.w,
+        runSpacing: 10.h,
+        children: [
+          ...controller.parkImages.map(
+                (file) => _buildImagePreview(
+              file: file,
+              onRemove: () => controller.removeParkImage(file),
+            ),
+          ),
+          if (controller.parkImages.length < 5)
+            _buildAddImageTile(
+              onTap: controller.pickParkImages,
+            ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildAddImageTile({required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 72.w,
+        height: 72.w,
+        decoration: BoxDecoration(
+          color: const Color(0xFFD8DEDD),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: const Color(0xFFC6CFCD)),
+        ),
+        child: Icon(
+          Icons.add_a_photo_outlined,
+          size: 24.sp,
+          color: const Color(0xFF5F6766),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImagePreview({
+    required File file,
+    required VoidCallback onRemove,
+  }) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: 72.w,
+          height: 72.w,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: borderColor),
+            image: DecorationImage(
+              image: FileImage(file),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Positioned(
+          top: -6,
+          right: -6,
+          child: GestureDetector(
+            onTap: onRemove,
+            child: Container(
+              width: 20.w,
+              height: 20.w,
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.close,
+                size: 12.sp,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

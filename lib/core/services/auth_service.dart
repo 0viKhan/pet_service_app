@@ -19,7 +19,7 @@ class AuthService {
 
       final decodedBody = jsonDecode(response.body);
 
-      if (response.statusCode == 200 && decodedBody['success'] == true) {
+      if (response.statusCode == 200  && decodedBody['success'] == true) {
         return;
       }
 
