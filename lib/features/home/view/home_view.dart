@@ -7,6 +7,7 @@ import 'package:untitled1/app/routes/app_routes.dart';
 
 import '../../../../core/services/local_storage_service.dart';
 import '../../auth/profile/controller/profile_controller.dart';
+import '../controller/home_controller.dart';
 import '../widgets/pets_section.dart';
 import '../widgets/service_card.dart';
 
@@ -19,7 +20,7 @@ class HomeView extends StatelessWidget {
   static const Color _textLight = Color(0xFF7B8794);
 
   final ProfileController _profileController = Get.find<ProfileController>();
-
+  final HomeController controller = Get.find<HomeController>();
   ImageProvider _getHomeProfileImage() {
     final File? localImage = _profileController.selectedLocalImage.value;
     final String networkImage = _profileController.profileImageUrl.value;
@@ -211,106 +212,117 @@ class HomeView extends StatelessWidget {
   }
 
   Widget _buildParkList() {
-    final parks = [
-      {
-        'title': 'Villa Borghese',
-        'location': 'Rome',
-        'image': 'assets/images/girl1.jpg',
-      },
-      {
-        'title': 'Parco Sempione',
-        'location': 'Milan',
-        'image': 'assets/images/girl2.jpg',
-      },
-      {
-        'title': 'Giardino',
-        'location': 'Florence',
-        'image': 'assets/images/girl2.jpg',
-      },
-      {
-        'title': 'Giardino',
-        'location': 'Florence',
-        'image': 'assets/images/girl1.jpg',
-      },
-    ];
+    return Obx(() {
 
-    return SizedBox(
-      height: 178.h,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: parks.length,
-        separatorBuilder: (_, __) => SizedBox(width: 12.w),
-        itemBuilder: (context, index) {
-          final park = parks[index];
-          return Container(
-            width: 142.w,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF1F1F1),
-              borderRadius: BorderRadius.circular(14.r),
-              border: Border.all(
-                color: const Color(0xFFE4E6E7),
-                width: 1,
+      if (controller.parkLoading.value) {
+        return SizedBox(
+          height: 178.h,
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+
+      if (controller.parks.isEmpty) {
+        return SizedBox(
+          height: 178.h,
+          child: const Center(
+            child: Text("No parks found"),
+          ),
+        );
+      }
+
+      return SizedBox(
+        height: 178.h,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: controller.parks.length,
+          separatorBuilder: (_, __) => SizedBox(width: 12.w),
+          itemBuilder: (context, index) {
+
+            final Map<String, dynamic> park =
+            controller.parks[index] as Map<String, dynamic>;
+
+            return Container(
+              width: 142.w,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF1F1F1),
+                borderRadius: BorderRadius.circular(14.r),
+                border: Border.all(
+                  color: const Color(0xFFE4E6E7),
+                  width: 1,
+                ),
               ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 95.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(14.r),
-                    ),
-                    image: DecorationImage(
-                      image: AssetImage(park['image']!),
-                      fit: BoxFit.cover,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                  /// PARK IMAGE
+                  Container(
+                    height: 95.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(14.r),
+                      ),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          park['imageUrl'] ?? "",
+                        ),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10.w, 9.h, 10.w, 8.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        park['title']!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF39424E),
-                        ),
-                      ),
-                      SizedBox(height: 5.h),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.location_on_outlined,
-                            size: 15.sp,
-                            color: _primary,
+
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10.w, 9.h, 10.w, 8.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        /// PARK NAME
+                        Text(
+                          park['parkName'] ?? "",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF39424E),
                           ),
-                          SizedBox(width: 3.w),
-                          Expanded(
-                            child: Text(
-                              park['location']!,
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                color: const Color(0xFF8B949E),
+                        ),
+
+                        SizedBox(height: 5.h),
+
+                        /// LOCATION
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on_outlined,
+                              size: 15.sp,
+                              color: _primary,
+                            ),
+                            SizedBox(width: 3.w),
+                            Expanded(
+                              child: Text(
+                                park['locationName'] ?? "",
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  color: const Color(0xFF8B949E),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    });
   }
 
   Widget _navIcon(IconData icon, bool active) {

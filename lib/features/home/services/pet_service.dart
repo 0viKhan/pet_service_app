@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:untitled1/core/config/api_constants.dart';
 
 class PetService {
 
   Future<List<dynamic>> getPets(String token) async {
 
     final response = await http.get(
-      Uri.parse('http://23.239.111.164:5022/api/v1/pets'),
+      Uri.parse(ApiConstants.myPet),
       headers: {
         "Authorization": "Bearer $token",
       },
