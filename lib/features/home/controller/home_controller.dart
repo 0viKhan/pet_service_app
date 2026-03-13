@@ -21,6 +21,13 @@ class HomeController extends GetxController {
     fetchParks();
   }
 
+  Future<void> refreshHomeData() async {
+    await Future.wait([
+      fetchPets(),
+      fetchParks(),
+    ]);
+  }
+
   // PETS
   Future<void> fetchPets() async {
     try {
@@ -53,9 +60,7 @@ class HomeController extends GetxController {
       }
 
       final data = await _parkService.getParks(token);
-
       parks.value = data;
-
     } catch (e) {
       Get.snackbar("Park Error", e.toString());
     } finally {

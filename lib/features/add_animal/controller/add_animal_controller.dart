@@ -5,9 +5,10 @@ import 'package:get/get.dart';
 
 import '../../../core/services/local_storage_service.dart';
 import '../../../core/services/photo_picker_service.dart';
+import '../../home/controller/home_controller.dart';
+import '../../home/services/park_service.dart';
 import '../../home/services/pet_service.dart';
 import '../model.dart';
-
 
 class AddAnimalController extends GetxController {
   final petNameController = TextEditingController();
@@ -129,6 +130,10 @@ class AddAnimalController extends GetxController {
       );
 
       if (success) {
+        if (Get.isRegistered<HomeController>()) {
+          await Get.find<HomeController>().refreshHomeData();
+        }
+
         Get.snackbar(
           'Success',
           'Pet added successfully',
@@ -141,6 +146,8 @@ class AddAnimalController extends GetxController {
         selectedAge.value = '2';
         selectedGender.value = 'Male';
         selectedAnimalType.value = 'DOG';
+
+        Get.back();
       }
     } catch (e) {
       debugPrint("Submit Pet Error: $e");
@@ -154,16 +161,69 @@ class AddAnimalController extends GetxController {
     }
   }
 
-  void submitPark() {
-    debugPrint('Park Name: ${parkNameController.text.trim()}');
-    debugPrint('Location: ${locationController.text.trim()}');
-    debugPrint('Link: ${linkController.text.trim()}');
+  Future<void> submitPark() async {
+    try {
+      if (parkNameController.text.trim().isEmpty) {
+        Get.snackbar('Validation', 'Please enter park name');
+        return;
+      }
 
-    Get.snackbar(
-      'Success',
-      'Park added successfully',
-      snackPosition: SnackPosition.BOTTOM,
-    );
+      if (locationController.text.trim().isEmpty) {
+        Get.snackbar('Validation', 'Please enter location name');
+        return;
+      }
+
+      if (parkImages.isEmpty) {
+        Get.snackbar('Validation', 'Please select an image');
+        return;
+      }
+
+      final token = await LocalStorageService.getAccessToken();
+
+      if (token == null || token.isEmpty) {
+        Get.snackbar('Error', 'Please login again');
+        return;
+      }
+
+      isSubmittingPark.value = true;
+
+      final success = await ParkService().createPark(
+        parkNameController.text.trim(),
+        locationController.text.trim(),
+        40.7128,
+        -74.0060,
+        token,
+        parkImages.first,
+      );
+
+      if (success) {
+        if (Get.isRegistered<HomeController>()) {
+          await Get.find<HomeController>().refreshHomeData();
+        }
+
+        Get.snackbar(
+          'Success',
+          'Park added successfully',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+
+        parkNameController.clear();
+        locationController.clear();
+        linkController.clear();
+        parkImages.clear();
+
+        Get.back();
+      }
+    } catch (e) {
+      debugPrint("Submit Park Error: $e");
+      Get.snackbar(
+        'Error',
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isSubmittingPark.value = false;
+    }
   }
 
   @override
