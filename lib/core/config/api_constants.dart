@@ -9,7 +9,9 @@ class ApiConstants {
   static const String updateProfile = '$baseUrl/users/update-profile';
   static const String logout = '$baseUrl/auth/logout';
   static const String myParks  = '$baseUrl/parks/my-parks';
-  static const String myPet  = '$baseUrl/pets';
+   static const String myPet  = '$baseUrl/pets';
+   static const String createPet  = '$baseUrl/pets/create';
+
 
 
 }
