@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:untitled1/features/auth/login/bindings/login_binding.dart';
+import 'package:untitled1/features/order_history/view/order_history_view.dart';
 import '../../features/add_animal/bindings/add_animal_binding.dart';
 import '../../features/add_animal/view/add_animal_view.dart';
 import '../../features/auth/forgot/bindings/forgot_password_binding.dart';
@@ -88,6 +89,10 @@ class AppPages {
         Get.lazyPut(() => ChangePasswordController());
       }),
     ),
+    GetPage(
+      name: AppRoutes.orderhistory,
+      page: ()=>OrderHistoryView()
+    )
 
   ];
 }

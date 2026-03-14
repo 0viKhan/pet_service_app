@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:untitled1/app/routes/app_routes.dart';
 
 import '../controller/profile_controller.dart';
 import '../widgets/logout_tile.dart';
@@ -104,8 +105,15 @@ class ProfileView extends StatelessWidget {
                       if (item.title == 'Edit Profile') {
                         Get.toNamed('/change-password');
                       }
+                      if(item.title=='Order History')
+                        {
+                          Get.toNamed(AppRoutes.orderhistory);
+                        }
+
+                        ;
                     },
                   );
+
                 },
               ),
             ),
