@@ -109,8 +109,19 @@ class ProfileView extends StatelessWidget {
                         {
                           Get.toNamed(AppRoutes.orderhistory);
                         }
-
-                        ;
+                        if(item.title=='My Added')
+                          {
+                            Get.toNamed(AppRoutes.orderadded);
+                          }
+                        if(item.title=='Transaction History')
+                          {
+                            Get.toNamed(AppRoutes.transactionhistory);
+                          }
+                      if (item.title == 'Privacy Policy') {
+                        Get.toNamed(AppRoutes.privacyPolicy);
+                      } if (item.title == 'Terms of Service') {
+                        Get.toNamed(AppRoutes.termsConditions);
+                      }
                     },
                   );
 

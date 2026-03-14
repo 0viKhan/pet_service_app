@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:untitled1/features/auth/login/bindings/login_binding.dart';
+import 'package:untitled1/features/my_added/view/my_added_view.dart';
 import 'package:untitled1/features/order_history/view/order_history_view.dart';
 import '../../features/add_animal/bindings/add_animal_binding.dart';
 import '../../features/add_animal/view/add_animal_view.dart';
@@ -15,8 +16,11 @@ import '../../features/auth/registration/binding/register_binding.dart';
 import '../../features/auth/registration/view/register_view.dart';
 import '../../features/notification/view/notification_screen.dart';
 import '../../features/pet_description/view/pet_details.dart';
+import '../../features/privacy/privacy_policy_view.dart';
 import '../../features/splash/bindings/splash_binding.dart';
 import '../../features/splash/views/splash_view.dart';
+import '../../features/terms_and_condition/terms_condition_view_page.dart';
+import '../../features/transaction/transaction_history.dart';
 import '../../features/welcome/bindings/welcome_binding.dart';
 import '../../features/welcome/onboarding screen/welcome_view.dart';
 import '../../main_view.dart';
@@ -92,7 +96,24 @@ class AppPages {
     GetPage(
       name: AppRoutes.orderhistory,
       page: ()=>OrderHistoryView()
-    )
+    ),
+    GetPage(
+      name: AppRoutes.orderadded,
+      page: ()=>MyAddedView()
+    ),
+
+    GetPage(
+      name: AppRoutes.transactionhistory,
+      page: ()=> const TransactionHistory()
+    ),
+    GetPage(
+      name: AppRoutes.privacyPolicy,
+      page: () => const PrivacyPolicyView(),
+    ),
+    GetPage(
+      name: AppRoutes.termsConditions,
+      page: () => const TermsConditionsView(),
+    ),
 
   ];
 }
