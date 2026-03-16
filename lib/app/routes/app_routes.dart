@@ -18,4 +18,4 @@ class AppRoutes {
   static const transactionhistory='/transaction-history';
   static const privacyPolicy = '/privacy-policy';
   static const termsConditions = '/terms-conditions';
-}
+  static const payement = '/payement';}

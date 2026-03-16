@@ -65,6 +65,11 @@ class ProfileView extends StatelessWidget {
         subtitle: 'Privacy Policy',
         icon: Icons.shield_outlined,
       ),
+      ProfileMenuItemData(
+        title: 'Payment',
+        subtitle: 'Manage your payments',
+        icon: Icons.payment_outlined,
+      ),
     ];
 
     return Scaffold(
@@ -119,7 +124,13 @@ class ProfileView extends StatelessWidget {
                           }
                       if (item.title == 'Privacy Policy') {
                         Get.toNamed(AppRoutes.privacyPolicy);
-                      } if (item.title == 'Terms of Service') {
+                      }
+                      if (item.title == 'Payment') {
+                        Get.toNamed(AppRoutes.payement);  // string '/payement' এর বদলে constant ব্যবহার করুন
+                      }
+
+
+                      if (item.title == 'Terms of Service') {
                         Get.toNamed(AppRoutes.termsConditions);
                       }
                     },

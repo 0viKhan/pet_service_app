@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:untitled1/features/auth/login/bindings/login_binding.dart';
 import 'package:untitled1/features/my_added/view/my_added_view.dart';
 import 'package:untitled1/features/order_history/view/order_history_view.dart';
+import 'package:untitled1/payment/stripe_payement.dart';
 import '../../features/add_animal/bindings/add_animal_binding.dart';
 import '../../features/add_animal/view/add_animal_view.dart';
 import '../../features/auth/forgot/bindings/forgot_password_binding.dart';
@@ -113,6 +114,10 @@ class AppPages {
     GetPage(
       name: AppRoutes.termsConditions,
       page: () => const TermsConditionsView(),
+    ),
+    GetPage(
+      name: AppRoutes.payement,
+      page: () => const PaymentScreen(),
     ),
 
   ];

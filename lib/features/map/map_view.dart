@@ -17,6 +17,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   final Set<Polyline> _polylines = {};
   bool _locationFetched = false;
   String _selectedFilter = 'All';
+  Map<String, dynamic>? _selectedShop;
 
   final List<String> _filters = [
     'All',
@@ -33,17 +34,16 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       'lng': 90.4150,
       'rating': 4.5,
       'price': '\$20.00',
-      'image': 'https://via.placeholder.com/80',
-      'type': 'Pet shops',
+      'image': 'https://img.freepik.com/free-vector/store-grocery-shop-building-isolated-white-background_1284-14054.jpg?semt=ais_hybrid&w=740&q=80',       'type': 'Pet shops',
     },
     {
       'id': '2',
       'name': 'Happy Paws Vet',
-      'lat': 23.8080,
-      'lng': 90.4100,
+      'lat': 23.8160,
+      'lng': 90.4160,
       'rating': 4.2,
       'price': '\$15.00',
-      'image': 'https://via.placeholder.com/80',
+      'image': 'assets/images/doctor_girl.jpg',
       'type': 'Veterinarians',
     },
     {
@@ -53,12 +53,10 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       'lng': 90.4180,
       'rating': 4.0,
       'price': '\$18.00',
-      'image': 'https://via.placeholder.com/80',
+      'image': 'assets/images/doctor_girl.jpg',
       'type': 'Dog trainers',
     },
   ];
-
-  Map<String, dynamic>? _selectedShop;
 
   @override
   void initState() {
@@ -108,7 +106,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     );
   }
 
-  // Calculate distance in meters and return label
   String _getDistanceLabel(LatLng shopLatLng) {
     double distance = Geolocator.distanceBetween(
       _currentPosition.latitude,
@@ -118,54 +115,54 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     );
 
     if (distance <= 500) return 'khub kachakachi';
-    if (distance <= 2000) return '${(distance / 1000).toStringAsFixed(1)} km away';
     return '${(distance / 1000).toStringAsFixed(1)} km away';
   }
 
   void _addMarkers() {
-    setState(() {
-      _markers.clear();
-      _polylines.clear();
+    _markers.clear();
+    _polylines.clear();
 
-      // Current location
+    // Current location marker
+    _markers.add(
+      Marker(
+        markerId: const MarkerId('currentLocation'),
+        position: _currentPosition,
+        infoWindow: const InfoWindow(title: 'Your location'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+      ),
+    );
+
+    // Filter shops
+    List<Map<String, dynamic>> filteredShops = _selectedFilter == 'All'
+        ? _petShops
+        : _petShops.where((shop) => shop['type'] == _selectedFilter).toList();
+
+    for (var shop in filteredShops) {
+      LatLng shopLatLng = LatLng(shop['lat'], shop['lng']);
+      String distanceLabel = _getDistanceLabel(shopLatLng);
+
       _markers.add(
         Marker(
-          markerId: const MarkerId('currentLocation'),
-          position: _currentPosition,
-          infoWindow: const InfoWindow(title: 'Your location'),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-        ),
-      );
-
-      // Filter shops
-      List<Map<String, dynamic>> filteredShops = _petShops;
-      if (_selectedFilter != 'All') {
-        filteredShops = _petShops
-            .where((shop) => shop['type'] == _selectedFilter)
-            .toList();
-      }
-
-      for (var shop in filteredShops) {
-        LatLng shopLatLng = LatLng(shop['lat'], shop['lng']);
-        String distanceLabel = _getDistanceLabel(shopLatLng);
-
-        _markers.add(
-          Marker(
-            markerId: MarkerId(shop['id']),
-            position: shopLatLng,
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
-            infoWindow: InfoWindow(
-              title: shop['name'],
-              snippet: distanceLabel,
-            ),
+          markerId: MarkerId(shop['id']),
+          position: shopLatLng,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+          infoWindow: InfoWindow(
+            title: shop['name'],
+            snippet: distanceLabel,
             onTap: () {
               setState(() => _selectedShop = shop);
               _drawRouteToShop(shopLatLng);
             },
           ),
-        );
-      }
-    });
+          onTap: () {
+            setState(() => _selectedShop = shop);
+            _drawRouteToShop(shopLatLng);
+          },
+        ),
+      );
+    }
+
+    setState(() {});
   }
 
   void _drawRouteToShop(LatLng destination) {
@@ -174,8 +171,8 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       Polyline(
         polylineId: const PolylineId('route'),
         points: [_currentPosition, destination],
-        color: Colors.blue,
-        width: 5,
+        color: Colors.red,
+        width: 6,
       ),
     );
     _animateToPosition(destination);
@@ -190,9 +187,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           GoogleMap(
             mapType: MapType.normal,
             initialCameraPosition: CameraPosition(target: _currentPosition, zoom: 14),
-            onMapCreated: (controller) {
-              _mapController = controller;
-            },
+            onMapCreated: (controller) => _mapController = controller,
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
             markers: _markers,
@@ -205,7 +200,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             },
           ),
 
-          // Top Bar with Back + Filters
+          // Top filters
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,7 +260,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             ),
           ),
 
-          // Bottom Shop Card
+          // Bottom shop card
           if (_selectedShop != null)
             Positioned(
               bottom: 90,
@@ -281,9 +276,18 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             right: 0,
             child: Center(
               child: FloatingActionButton(
-                backgroundColor: const Color(0xFF2D6A4F),
-                onPressed: () {},
-                child: const Icon(Icons.add, color: Colors.white),
+
+                onPressed: () {
+                  // Animate the map camera to the user's current location
+                  if (_mapController != null) {
+                    _mapController!.animateCamera(
+                      CameraUpdate.newCameraPosition(
+                        CameraPosition(target: _currentPosition, zoom: 16),
+                      ),
+                    );
+                  }
+                },
+                child: const Icon(Icons.location_disabled, color: Colors.green),
               ),
             ),
           ),
@@ -293,6 +297,17 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   }
 
   Widget _buildShopCard(Map<String, dynamic> shop) {
+    final img = shop['image'] as String?;
+    Widget imageWidget;
+
+    if (img != null && img.startsWith('assets/')) {
+      imageWidget = Image.asset(img, width: 70, height: 70, fit: BoxFit.cover, errorBuilder: (_, __, ___) => _placeholderImage());
+    } else if (img != null && img.startsWith('http')) {
+      imageWidget = Image.network(img, width: 70, height: 70, fit: BoxFit.cover, errorBuilder: (_, __, ___) => _placeholderImage());
+    } else {
+      imageWidget = _placeholderImage();
+    }
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -302,21 +317,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       ),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              shop['image'],
-              width: 70,
-              height: 70,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                width: 70,
-                height: 70,
-                color: Colors.grey[200],
-                child: const Icon(Icons.pets, color: Colors.grey),
-              ),
-            ),
-          ),
+          ClipRRect(borderRadius: BorderRadius.circular(10), child: imageWidget),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -349,6 +350,15 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _placeholderImage() {
+    return Container(
+      width: 70,
+      height: 70,
+      color: Colors.grey[200],
+      child: const Icon(Icons.pets, color: Colors.grey),
     );
   }
 }

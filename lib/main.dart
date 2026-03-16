@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 
 import 'app/routes/app_pages.dart';
@@ -11,6 +12,11 @@ import 'core/services/photo_picker_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Stripe
+  Stripe.publishableKey = 'pk_test_51TBUbB5DDGO0lwPBsIBombJymCiMPeXieuXDBGOIH3lkSb67sdVHx2gjEvonWlElPbCCh3HkTa7n6XKcGeYKRLTw000FQOQ3Zl';
+  Stripe.merchantIdentifier = 'sk_test_51TBUbB5DDGO0lwPBHBwBxCURuhddoDQty2yLOBtpkhFY9u0eaT5QtY9S0QaYXIgyJRrbwnOp9wgEIoekTYhm9V3T00SnWvDkhk'; // optional for Apple Pay
+  await Stripe.instance.applySettings(); // apply settings
 
   Get.put(PhotoPickerService());
 
