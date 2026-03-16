@@ -1,9 +1,6 @@
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../app/routes/app_routes.dart';
 
-import 'package:get/get.dart';
-import '../../../app/routes/app_routes.dart';
 import '../../../core/services/local_storage_service.dart';
 
 class SplashController extends GetxController {
@@ -24,7 +21,9 @@ class SplashController extends GetxController {
     if (token != null && token.isNotEmpty) {
       Get.offAllNamed(AppRoutes.home);
     } else {
-      Get.offAllNamed(AppRoutes.welcome);
+     // Get.offAllNamed(AppRoutes.welcome);(corrrect )
+      Get.offAllNamed(AppRoutes.home);
+
     }
   }
 }
